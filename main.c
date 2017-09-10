@@ -215,8 +215,8 @@ ISR(TIMER0_COMPA_vect) {
 int main(void) {
 	// Disable analog comparator
 	ACSR |= _BV(ACD);
-	// Disable ADC and TIM1
-	PRR |= _BV(PRADC) | _BV(PRTIM1);
+	// Disable ADC, TIM1 and USI
+	PRR |= _BV(PRADC) | _BV(PRUSI) | _BV(PRTIM1);
 	// PB2: Input pullup
 	OW_RELEASE();
 	// TIM0: overflow and compare A interrupts
