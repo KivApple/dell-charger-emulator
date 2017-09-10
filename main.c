@@ -19,7 +19,7 @@ static struct {
 	uint8_t bit_state;
 	uint8_t current_byte;
 	uint8_t current_bit;
-	uint8_t command;
+	uint8_t current_value;
 	union {
 		const uint8_t *tx_buffer;
 		uint8_t *rx_buffer;
@@ -27,6 +27,7 @@ static struct {
 	uint8_t buffer_size;
 	uint8_t buffer_in_progmem;
 	void (*callback)(void);
+	uint8_t command;
 	uint8_t selected;
 	uint8_t pull_low_next;
 	uint8_t arg_buffer[8];
@@ -56,7 +57,7 @@ static inline void ow_rx(uint8_t *buffer, uint8_t count, void (*callback)(void))
 	ow.callback = callback;
 	ow.current_byte = 0;
 	ow.current_bit = 0;
-	buffer[0] = 0;
+	ow.current_value = 0;
 }
 
 static inline void ow_tx(const uint8_t *buffer, uint8_t count, uint8_t in_progmem, void (*callback)(void)) {
@@ -67,7 +68,8 @@ static inline void ow_tx(const uint8_t *buffer, uint8_t count, uint8_t in_progme
 	ow.callback = callback;
 	ow.current_byte = 0;
 	ow.current_bit = 0;
-	ow.pull_low_next = !((in_progmem ? pgm_read_byte(buffer) : buffer[0]) & 1);
+	ow.current_value = in_progmem ? pgm_read_byte(buffer) : buffer[0];
+	ow.pull_low_next = !(ow.current_value & 1);
 }
 
 static void ow_read_real_mem(void) {
@@ -113,22 +115,22 @@ static void ow_bit_change(uint8_t bit) {
 		case OW_STATE_RX:
 			if (!bit) {
 				_delay_us(10);
-				uint8_t *buffer = ow.rx_buffer;
-				uint8_t cur_byte = ow.current_byte;
 				uint8_t cur_bit = ow.current_bit;
 				if (PINB & _BV(2)) {
-					buffer[cur_byte] |= _BV(cur_bit);
+					ow.current_value |= _BV(cur_bit);
 				}
 				cur_bit++;
 				if (cur_bit == 8) {
-					cur_byte++;
+					uint8_t cur_byte = ow.current_byte;
+					ow.rx_buffer[cur_byte++] = ow.current_value;
+					ow.current_value = 0;
 					cur_bit = 0;
 					if (cur_byte == ow.buffer_size) {
 						ow.state = OW_STATE_IDLE;
 					}
+					ow.current_byte = cur_byte;
 				}
 				ow.current_bit = cur_bit;
-				ow.current_byte = cur_byte;
 				if (ow.state == OW_STATE_IDLE) {
 					if (ow.callback) {
 						ow.callback();
@@ -139,22 +141,24 @@ static void ow_bit_change(uint8_t bit) {
 		case OW_STATE_TX:
 			if (!bit) {
 				_delay_us(30);
-				OW_RELEASE();
-				const uint8_t *buffer = ow.tx_buffer;
-				uint8_t cur_byte = ow.current_byte;
 				uint8_t cur_bit = ow.current_bit;
 				cur_bit++;
 				if (cur_bit == 8) {
+					uint8_t cur_byte = ow.current_byte;
 					cur_byte++;
 					cur_bit = 0;
+					if (cur_byte == ow.buffer_size) {
+						ow.state = OW_STATE_IDLE;
+					} else {
+						ow.current_value = ow.buffer_in_progmem ? pgm_read_byte(ow.tx_buffer + cur_byte) : ow.tx_buffer[cur_byte];
+					}
+					ow.current_byte = cur_byte;
 				}
-				if (cur_byte == ow.buffer_size) {
-					ow.state = OW_STATE_IDLE;
-				} else {
-					ow.pull_low_next = !((ow.buffer_in_progmem ? pgm_read_byte(buffer + cur_byte) : buffer[cur_byte]) & _BV(cur_bit));
+				if (ow.state != OW_STATE_IDLE) {
+					ow.pull_low_next = !(ow.current_value & _BV(cur_bit));
 				}
-				ow.current_byte = cur_byte;
 				ow.current_bit = cur_bit;
+				OW_RELEASE();
 				if (ow.state == OW_STATE_IDLE) {
 					if (ow.callback) {
 						ow.callback();
