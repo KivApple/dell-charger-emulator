@@ -19,3 +19,5 @@ Here:
 The description may not be entirely accurate. I'll be glad if you clarify.
 
 Warning: do not mask the weak power adapter to a more powerful one. This can lead to hardware damage.
+
+You need ATTINY25, ATTINY45 or ATTINY85 MCU (you may need to change compiler flags in Makefile) running at 8 MHz (the internal RC-oscillator is suitable, but if desired, you can use an external crystal - adjust the fuses accordingly). The Dell power adapter connector has three pins - GND, VOUT (19V) and ID. Connect the ID to the PB2 pin of the microcontroller. Also provide 3.3V power for MCU (you can use a simple linear regulator 78L33 to make the desired voltage from 19V).
