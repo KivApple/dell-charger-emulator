@@ -13,6 +13,7 @@ enum {
 	OW_STATE_RX,
 	OW_STATE_TX
 };
+
 static struct {
 	uint8_t state;
 	uint8_t bit_state;
@@ -71,8 +72,9 @@ static inline void ow_tx(const uint8_t *buffer, uint8_t count, uint8_t in_progme
 
 static void ow_read_real_mem(void) {
 	uint16_t offset = (((uint16_t) ow.arg_buffer[1]) << 8) | ow.arg_buffer[0];
-	uint8_t max_len = sizeof(eeprom_data) - offset;
-	ow_tx(eeprom_data, max_len, 1, NULL);
+	uint8_t max_len = EEPROM_DATA_LENGTH - offset;
+	const uint8_t *base = eeprom_data + offset;
+	ow_tx(base, max_len, 1, NULL);
 }
 
 static void ow_read_mem(void) {
@@ -84,7 +86,7 @@ static void ow_read_mem(void) {
 static void ow_command_received(void) {
 	switch (ow.command) {
 		case 0x33: // READ ROM
-			ow_tx(ow_address, sizeof(ow_address), 0, NULL);
+			ow_tx(ow_address, 8, 1, NULL);
 			break;
 		case 0xCC: // SKIP ROM
 			ow.selected = 1;
