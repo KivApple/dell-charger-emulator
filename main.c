@@ -217,6 +217,9 @@ int main(void) {
 	ACSR |= _BV(ACD);
 	// Disable ADC, TIM1 and USI
 	PRR |= _BV(PRADC) | _BV(PRUSI) | _BV(PRTIM1);
+	// All pins: Input pullup
+	DDRB = 0;
+	PORTB = 0xFF;
 	// PB2: Input pullup
 	OW_RELEASE();
 	// TIM0: overflow and compare A interrupts

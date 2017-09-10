@@ -1,6 +1,7 @@
 PROJECT=dell-charger-emulator
 CFLAGS?=-O2 -ggdb
 CFLAGS+=-mmcu=attiny85 -DF_CPU=8000000
+FUSES=-U lfuse:w:0xd2:m -U hfuse:w:0xd7:m -U efuse:w:0xff:m
 SRC=$(wildcard *.c)
 
 all: $(PROJECT).hex
