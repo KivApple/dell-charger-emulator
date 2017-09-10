@@ -24,6 +24,7 @@ static struct {
 		uint8_t *rx_buffer;
 	};
 	uint8_t buffer_size;
+	uint8_t buffer_in_progmem;
 	void (*callback)(void);
 	uint8_t selected;
 	uint8_t pull_low_next;
@@ -57,32 +58,33 @@ static inline void ow_rx(uint8_t *buffer, uint8_t count, void (*callback)(void))
 	buffer[0] = 0;
 }
 
-static inline void ow_tx(const uint8_t *buffer, uint8_t count, void (*callback)(void)) {
+static inline void ow_tx(const uint8_t *buffer, uint8_t count, uint8_t in_progmem, void (*callback)(void)) {
 	ow.state = OW_STATE_TX;
 	ow.tx_buffer = buffer;
 	ow.buffer_size = count;
+	ow.buffer_in_progmem = in_progmem;
 	ow.callback = callback;
 	ow.current_byte = 0;
 	ow.current_bit = 0;
-	ow.pull_low_next = !(buffer[0] & 1);
+	ow.pull_low_next = !((in_progmem ? pgm_read_byte(buffer) : buffer[0]) & 1);
 }
 
 static void ow_read_real_mem(void) {
 	uint16_t offset = (((uint16_t) ow.arg_buffer[1]) << 8) | ow.arg_buffer[0];
 	uint8_t max_len = sizeof(eeprom_data) - offset;
-	ow_tx(eeprom_data, max_len, NULL);
+	ow_tx(eeprom_data, max_len, 1, NULL);
 }
 
 static void ow_read_mem(void) {
 	uint8_t tmp[] = { ow.command, ow.arg_buffer[0], ow.arg_buffer[1] };
 	ow.arg_buffer[2] = Crc8(tmp, sizeof(tmp));
-	ow_tx(ow.arg_buffer + 2, 1, ow_read_real_mem);
+	ow_tx(ow.arg_buffer + 2, 1, 0, ow_read_real_mem);
 }
 
 static void ow_command_received(void) {
 	switch (ow.command) {
 		case 0x33: // READ ROM
-			ow_tx(ow_address, sizeof(ow_address), NULL);
+			ow_tx(ow_address, sizeof(ow_address), 0, NULL);
 			break;
 		case 0xCC: // SKIP ROM
 			ow.selected = 1;
@@ -147,7 +149,7 @@ static void ow_bit_change(uint8_t bit) {
 				if (cur_byte == ow.buffer_size) {
 					ow.state = OW_STATE_IDLE;
 				} else {
-					ow.pull_low_next = !(buffer[cur_byte] & _BV(cur_bit));
+					ow.pull_low_next = !((ow.buffer_in_progmem ? pgm_read_byte(buffer + cur_byte) : buffer[cur_byte]) & _BV(cur_bit));
 				}
 				ow.current_byte = cur_byte;
 				ow.current_bit = cur_bit;

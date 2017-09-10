@@ -1,4 +1,7 @@
-static const unsigned char Crc8Table[256] = {
+#include <avr/pgmspace.h>
+#include "crc8.h"
+
+static const unsigned char PROGMEM Crc8Table[256] = {
 	0, 94, 188, 226, 97, 63, 221, 131, 194, 156, 126, 32, 163, 253, 31, 65,
 	157, 195, 33, 127, 252, 162, 64, 30, 95, 1, 227, 189, 62, 96, 130, 220,
 	35, 125, 159, 193, 66, 28, 254, 160, 225, 191, 93, 3, 128, 222, 60, 98,
@@ -20,7 +23,7 @@ static const unsigned char Crc8Table[256] = {
 unsigned char Crc8(unsigned char *pcBlock, unsigned char len) {
 	unsigned char crc = 0x00;
 	while (len--) {
-		crc = Crc8Table[crc ^ *pcBlock++];
+		crc = pgm_read_byte(Crc8Table + (crc ^ *pcBlock++));
 	}
 	return crc;
 }
