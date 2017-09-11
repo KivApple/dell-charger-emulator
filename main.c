@@ -43,10 +43,10 @@ static inline void ow_start_timer(void) {
 	TCNT0 = 0;
 #if F_CPU == 1000000
 	TCCR0B = _BV(CS00);
-#elif F_CPU == 8000000
+#elif (F_CPU >= 8000000) && (F_CPU <= 9000000)
 	TCCR0B = _BV(CS01);
 #else
-#error F_CPU should be 1 MHz or 8 MHz
+#error F_CPU should be 1 MHz or 8..9 MHz
 #endif
 }
 
@@ -103,7 +103,7 @@ static void ow_command_received(void) {
 }
 
 static void ow_bit_change(uint8_t bit) {
-	//bit ? (PORTB |= _BV(PB3)) : (PORTB &= ~_BV(PB3));
+	//bit ? (PORTB |= _BV(PB1)) : (PORTB &= ~_BV(PB1));
 	switch (ow.state) {
 		case OW_STATE_RESET:
 			if (bit) {
@@ -116,7 +116,7 @@ static void ow_bit_change(uint8_t bit) {
 			if (!bit) {
 				_delay_us(10);
 				uint8_t cur_bit = ow.current_bit;
-				if (PINB & _BV(2)) {
+				if (PINB & _BV(PB2)) {
 					ow.current_value |= _BV(cur_bit);
 				}
 				cur_bit++;
