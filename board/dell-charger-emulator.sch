@@ -1,0 +1,277 @@
+EESchema Schematic File Version 2
+LIBS:power
+LIBS:device
+LIBS:transistors
+LIBS:conn
+LIBS:linear
+LIBS:regul
+LIBS:74xx
+LIBS:cmos4000
+LIBS:adc-dac
+LIBS:memory
+LIBS:xilinx
+LIBS:microcontrollers
+LIBS:dsp
+LIBS:microchip
+LIBS:analog_switches
+LIBS:motorola
+LIBS:texas
+LIBS:intel
+LIBS:audio
+LIBS:interface
+LIBS:digital-audio
+LIBS:philips
+LIBS:display
+LIBS:cypress
+LIBS:siliconi
+LIBS:opto
+LIBS:atmel
+LIBS:contrib
+LIBS:valves
+LIBS:dell-charger-emulator-cache
+EELAYER 25 0
+EELAYER END
+$Descr A4 11693 8268
+encoding utf-8
+Sheet 1 1
+Title ""
+Date ""
+Rev ""
+Comp ""
+Comment1 ""
+Comment2 ""
+Comment3 ""
+Comment4 ""
+$EndDescr
+$Comp
+L ATTINY85-20SU U1
+U 1 1 59B718C6
+P 5850 3550
+F 0 "U1" H 4700 3950 50  0000 C CNN
+F 1 "ATTINY85-20SU" H 6850 3150 50  0000 C CNN
+F 2 "Housings_SOIC:SOIC-8_3.9x4.9mm_Pitch1.27mm" H 6800 3550 50  0001 C CIN
+F 3 "" H 5850 3550 50  0001 C CNN
+	1    5850 3550
+	1    0    0    -1  
+$EndComp
+$Comp
+L MC78L05ACD U2
+U 1 1 59B71934
+P 5850 4450
+F 0 "U2" H 5650 4650 50  0000 C CNN
+F 1 "MC78L05ACD" H 5850 4650 50  0000 L CNN
+F 2 "Housings_SOIC:SOIC-8_3.9x4.9mm_Pitch1.27mm" H 5850 4550 50  0001 C CIN
+F 3 "" H 5850 4450 50  0001 C CNN
+	1    5850 4450
+	1    0    0    -1  
+$EndComp
+$Comp
+L C C1
+U 1 1 59B71A1B
+P 5150 4650
+F 0 "C1" H 5175 4750 50  0000 L CNN
+F 1 "330n" H 5175 4550 50  0000 L CNN
+F 2 "Capacitors_SMD:C_0805_HandSoldering" H 5188 4500 50  0001 C CNN
+F 3 "" H 5150 4650 50  0001 C CNN
+	1    5150 4650
+	1    0    0    -1  
+$EndComp
+$Comp
+L C C2
+U 1 1 59B71AC6
+P 6550 4650
+F 0 "C2" H 6575 4750 50  0000 L CNN
+F 1 "100n" H 6575 4550 50  0000 L CNN
+F 2 "Capacitors_SMD:C_0805_HandSoldering" H 6588 4500 50  0001 C CNN
+F 3 "" H 6550 4650 50  0001 C CNN
+	1    6550 4650
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	6250 4400 6550 4400
+Wire Wire Line
+	6550 4300 6550 4500
+Wire Wire Line
+	5450 4400 5150 4400
+Wire Wire Line
+	5150 4300 5150 4500
+Wire Wire Line
+	5150 4800 5150 4900
+Wire Wire Line
+	5150 4900 6550 4900
+Wire Wire Line
+	5700 4900 5700 4750
+Wire Wire Line
+	5800 4900 5800 4750
+Connection ~ 5700 4900
+Wire Wire Line
+	5900 4900 5900 4750
+Connection ~ 5800 4900
+Wire Wire Line
+	6000 4900 6000 4750
+Connection ~ 5900 4900
+Wire Wire Line
+	6550 4900 6550 4800
+Connection ~ 6000 4900
+$Comp
+L +3.3V #PWR01
+U 1 1 59B71B56
+P 6550 4300
+F 0 "#PWR01" H 6550 4150 50  0001 C CNN
+F 1 "+3.3V" H 6550 4440 50  0000 C CNN
+F 2 "" H 6550 4300 50  0001 C CNN
+F 3 "" H 6550 4300 50  0001 C CNN
+	1    6550 4300
+	1    0    0    -1  
+$EndComp
+$Comp
+L +3.3V #PWR02
+U 1 1 59B71B72
+P 7300 3200
+F 0 "#PWR02" H 7300 3050 50  0001 C CNN
+F 1 "+3.3V" H 7300 3340 50  0000 C CNN
+F 2 "" H 7300 3200 50  0001 C CNN
+F 3 "" H 7300 3200 50  0001 C CNN
+	1    7300 3200
+	1    0    0    -1  
+$EndComp
+$Comp
+L GND #PWR03
+U 1 1 59B71B8E
+P 7300 3900
+F 0 "#PWR03" H 7300 3650 50  0001 C CNN
+F 1 "GND" H 7300 3750 50  0000 C CNN
+F 2 "" H 7300 3900 50  0001 C CNN
+F 3 "" H 7300 3900 50  0001 C CNN
+	1    7300 3900
+	1    0    0    -1  
+$EndComp
+$Comp
+L GND #PWR04
+U 1 1 59B71BAA
+P 5850 5050
+F 0 "#PWR04" H 5850 4800 50  0001 C CNN
+F 1 "GND" H 5850 4900 50  0000 C CNN
+F 2 "" H 5850 5050 50  0001 C CNN
+F 3 "" H 5850 5050 50  0001 C CNN
+	1    5850 5050
+	1    0    0    -1  
+$EndComp
+$Comp
+L VCC #PWR05
+U 1 1 59B71BC6
+P 5150 4300
+F 0 "#PWR05" H 5150 4150 50  0001 C CNN
+F 1 "VCC" H 5150 4450 50  0000 C CNN
+F 2 "" H 5150 4300 50  0001 C CNN
+F 3 "" H 5150 4300 50  0001 C CNN
+	1    5150 4300
+	1    0    0    -1  
+$EndComp
+Connection ~ 5150 4400
+Connection ~ 6550 4400
+Wire Wire Line
+	7200 3800 7300 3800
+Wire Wire Line
+	7300 3800 7300 3900
+Wire Wire Line
+	7200 3300 7300 3300
+Wire Wire Line
+	7300 3300 7300 3200
+NoConn ~ 4500 3800
+NoConn ~ 4500 3700
+NoConn ~ 4500 3600
+NoConn ~ 4500 3400
+NoConn ~ 4500 3300
+$Comp
+L CONN_01X03 J1
+U 1 1 59B71D1A
+P 3800 3600
+F 0 "J1" H 3800 3800 50  0000 C CNN
+F 1 "CONN_01X03" V 3900 3600 50  0000 C CNN
+F 2 "Pin_Headers:Pin_Header_Angled_1x03_Pitch2.00mm" H 3800 3600 50  0001 C CNN
+F 3 "" H 3800 3600 50  0001 C CNN
+	1    3800 3600
+	-1   0    0    -1  
+$EndComp
+$Comp
+L GND #PWR06
+U 1 1 59B71E84
+P 4050 3800
+F 0 "#PWR06" H 4050 3550 50  0001 C CNN
+F 1 "GND" H 4050 3650 50  0000 C CNN
+F 2 "" H 4050 3800 50  0001 C CNN
+F 3 "" H 4050 3800 50  0001 C CNN
+	1    4050 3800
+	1    0    0    -1  
+$EndComp
+$Comp
+L VCC #PWR07
+U 1 1 59B71EA2
+P 4250 3800
+F 0 "#PWR07" H 4250 3650 50  0001 C CNN
+F 1 "VCC" H 4250 3950 50  0000 C CNN
+F 2 "" H 4250 3800 50  0001 C CNN
+F 3 "" H 4250 3800 50  0001 C CNN
+	1    4250 3800
+	-1   0    0    1   
+$EndComp
+Wire Wire Line
+	5850 5050 5850 4900
+Connection ~ 5850 4900
+$Comp
+L CONN_01X02 J2
+U 1 1 59B7202C
+P 8250 3550
+F 0 "J2" H 8250 3700 50  0000 C CNN
+F 1 "CONN_01X02" V 8350 3550 50  0000 C CNN
+F 2 "Pin_Headers:Pin_Header_Angled_1x02_Pitch2.00mm" H 8250 3550 50  0001 C CNN
+F 3 "" H 8250 3550 50  0001 C CNN
+	1    8250 3550
+	1    0    0    -1  
+$EndComp
+$Comp
+L VCC #PWR08
+U 1 1 59B72085
+P 7950 3400
+F 0 "#PWR08" H 7950 3250 50  0001 C CNN
+F 1 "VCC" H 7950 3550 50  0000 C CNN
+F 2 "" H 7950 3400 50  0001 C CNN
+F 3 "" H 7950 3400 50  0001 C CNN
+	1    7950 3400
+	1    0    0    -1  
+$EndComp
+$Comp
+L GND #PWR09
+U 1 1 59B720A5
+P 7950 3700
+F 0 "#PWR09" H 7950 3450 50  0001 C CNN
+F 1 "GND" H 7950 3550 50  0000 C CNN
+F 2 "" H 7950 3700 50  0001 C CNN
+F 3 "" H 7950 3700 50  0001 C CNN
+	1    7950 3700
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	8050 3600 7950 3600
+Wire Wire Line
+	7950 3600 7950 3700
+Wire Wire Line
+	8050 3500 7950 3500
+Wire Wire Line
+	7950 3500 7950 3400
+Wire Wire Line
+	4050 3800 4050 3500
+Wire Wire Line
+	4050 3500 4000 3500
+Wire Wire Line
+	4000 3700 4250 3700
+Wire Wire Line
+	4250 3700 4250 3800
+Wire Wire Line
+	4000 3600 4250 3600
+Wire Wire Line
+	4250 3600 4250 3500
+Wire Wire Line
+	4250 3500 4500 3500
+$EndSCHEMATC
