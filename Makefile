@@ -16,3 +16,9 @@ $(PROJECT).elf: $(SRC) Makefile
 clean:
 	rm -rfv $(PROJECT).hex $(PROJECT).elf
 
+load: $(PROJECT).hex
+	avrdude -c buspirate -P /dev/ttyUSB0 -p t85 -U flash:w:$<
+
+fuses:
+	avrdude -c buspirate -P /dev/ttyUSB0 -p t85 $(FUSES)
+

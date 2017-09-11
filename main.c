@@ -169,29 +169,23 @@ static void ow_bit_change(uint8_t bit) {
 	}
 	if (!bit) {
 		ow_start_timer();
+	} else {
+		_delay_us(10);
 	}
 }
 
 ISR(INT0_vect) {
-	GIFR = _BV(INTF0);
 	uint8_t bit = ow.bit_state;
-	bit = !bit;
-	if (!bit && ow.pull_low_next) {
-		OW_PULL_LOW();
-		ow.pull_low_next = 0;
-	}
-	ow_bit_change(bit);
-	if (GIFR & _BV(INTF0)) {
+	do {
+		GIFR = _BV(INTF0);
 		bit = !bit;
+		if (!bit && ow.pull_low_next) {
+			OW_PULL_LOW();
+			ow.pull_low_next = 0;
+		}
 		ow_bit_change(bit);
-	}
-	uint8_t new_bit = (PINB & _BV(PB2)) ? 1 : 0;
-	while (new_bit != bit) {
-		bit = new_bit;
-		ow_bit_change(bit);
-		new_bit = (PINB & _BV(PB2)) ? 1 : 0;
-	}
-	ow.bit_state = bit;
+	} while (GIFR & _BV(INTF0));
+	ow.bit_state = (PINB & _BV(PB2)) ? 1 : 0;
 }
 
 ISR(TIMER0_OVF_vect) {
@@ -228,6 +222,9 @@ int main(void) {
 	// INT0: Any change
 	MCUCR = (MCUCR | _BV(ISC00)) & ~_BV(ISC01);
 	GIMSK |= _BV(INT0);
+	// Read current line state
+	GIFR = _BV(INTF0);
+	ow.bit_state = (PINB & _BV(PB2)) ? 1 : 0;
 	// Enable interrupts
 	sei();
 	// Main loop
