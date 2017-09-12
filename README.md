@@ -13,8 +13,8 @@ You can configure adapter settings in the file eeprom_data.c. It contains the fo
 Here:
 
     045: 45 watts
-    1950: 19.50 volts
-    23: 2.3 amps
+    195: 19.5 volts
+    023: 2.3 amps
 
 The description may not be entirely accurate. I'll be glad if you clarify.
 
