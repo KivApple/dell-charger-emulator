@@ -3,3 +3,5 @@
 *.bak
 *-bak
 *-cache.lib
+*.gbr
+*.drl
