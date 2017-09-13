@@ -28,3 +28,17 @@ You must flash the EEPROM data together with the program code. Later you can onl
 **Warning: do not mask the weak power adapter to a more powerful one. This can lead to hardware damage.**
 
 You need ATTINY25, ATTINY45 or ATTINY85 MCU (you may need to change compiler flags in Makefile) running at 8 MHz (the internal RC-oscillator is suitable, but if desired, you can use an external crystal - adjust the fuses accordingly). The Dell power adapter connector has three pins - GND, VOUT (19V) and ID. Connect the ID to the PB2 pin of the microcontroller. Also provide 3.3V power for MCU (you can use a simple linear regulator 78L33 to make the desired voltage from 19V).
+
+## Reading and writing EEPROM
+
+You can read and write EEPROM using dell-charger-data-editor.py (see console menu of this utility).
+
+You need connect OneWire bus to any USB-UART adapter using simple schematic with diode:
+
+    TXD --------|<|----*-------- ID
+                       |
+    RXD ----------------
+
+**Warning: USB-UART adapter should use 3.3V or 5V logic levels. 12V levels will damage EEPROM IC.**
+
+You can read by this utility both original EEPROM and emulated by AVR. You can write only emulated EEPROM.
