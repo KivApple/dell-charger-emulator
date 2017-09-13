@@ -8,13 +8,19 @@ of the original adapter to the requests of the laptop.
 
 You can configure adapter settings in the file eeprom_data.c. It contains the following string:
 
-    DELL00AC045195023CN ... something like serial number ...
+    "DELL00AC045195023CN0CDF577243865Q27F2A05=\x94"
 
 Here:
 
-    045: 45 watts
-    195: 19.5 volts
-    023: 2.3 amps
+| Offset | Length | Content                 | Description              |
+|--------|--------|-------------------------|--------------------------|
+|      0 |      4 | DELL                    | Manufacturer identifier  |
+|      4 |      4 | 00AC                    | Adapter type             |
+|      8 |      3 | 045                     | Watts (45W)              |
+|     11 |      3 | 195                     | Tenths of a volt (19.5V) |
+|     14 |      3 | 023                     | Tenths of amps (2.3A)    |
+|     17 |     23 | CN0CDF577243865Q27F2A05 | Serial number            |
+|     40 |      2 | 0x3D 0x94               | CRC-16/ARC (LSB first)   |
 
 The description may not be entirely accurate. I'll be glad if you clarify.
 
