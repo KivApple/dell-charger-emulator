@@ -1,5 +1,4 @@
 *.elf
-*.hex
 *.bak
 *-bak
 *-cache.lib

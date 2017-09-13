@@ -6,11 +6,8 @@ If you connect an unoriginal adapter, the laptop refuses to charge the battery.
 This project allows to use the cheap and small microcontroller ATTINY85 for emulating the answers
 of the original adapter to the requests of the laptop.
 
-You can configure adapter settings in the file eeprom_data.c. It contains the following string:
-
-    "DELL00AC045195023CN0CDF577243865Q27F2A05=\x94"
-
-Here:
+You can configure adapter settings in the file eeprom-data.hex. This file contains EEPROM data in Intel Hex format.
+Format of Dell charger identification shown below:
 
 | Offset | Length | Content                 | Description              |
 |--------|--------|-------------------------|--------------------------|
@@ -23,6 +20,10 @@ Here:
 |     40 |      2 | 0x3D 0x94               | CRC-16/ARC (LSB first)   |
 
 The description may not be entirely accurate. I'll be glad if you clarify.
+
+You can use Python utility dell-charger-data-editor.py to easily change this values.
+
+You must flash the EEPROM data together with the program code. Later you can only re-write EEPROM.
 
 **Warning: do not mask the weak power adapter to a more powerful one. This can lead to hardware damage.**
 
