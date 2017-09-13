@@ -105,6 +105,142 @@ def save_data(filename):
 			offset += 16
 		f.write(':00000001FF\n')
 
+def open_serial_port():
+	try:
+		import serial
+		import serial.tools.list_ports
+	except Exception as e:
+		print(str(e))
+		print('Please install pyserial to use this functional!')
+		return
+	while True:
+		ports = serial.tools.list_ports.comports()
+		print(' [0] Return to main menu')
+		print(' [1] Enter custom serial port name')	
+		i = 2
+		for port in ports:
+			print(' [%i] %s' % (i, port))
+			i += 1
+		try:
+			j = int(input('Select option [0-%i]: ' % (i - 1)))
+			if (j < 0) or (j >= i):
+				continue
+			if j == 0:
+				return
+			try:
+				if j == 1:
+					port = input('Enter serial port name (e. g. /dev/ttyUSB0, COM1): ')
+					return serial.Serial(port)
+				else:
+					port = ports[j - 2]
+					return serial.Serial(port[0])
+			except Exception as e:
+				print('Error: %s' % str(e))
+		except Exception:
+			continue
+
+def ow_reset(port):
+	port.timeout = 1
+	port.bytesize = 8
+	port.parity = 'N'
+	port.stopbits = 1
+	port.rtscts = 0
+	port.xonxoff = 0
+	port.baudrate = 9600
+	port.write(b'\xF0')
+	response = port.read(1)
+	port.baudrate = 115200
+	if len(response) != 1:
+		print('Warning: Timeout! Did you forgot to connect diode RX -|>|- TX?')
+	return (len(response) == 1) and (response[0] < 0xF0)
+
+def ow_write(port, byte):
+	for i in range(0, 8):
+		value = b'\xFF' if byte & (1 << i) else b'\x00'
+		port.write(value)
+		response = port.read(1)
+		if (len(response) != 1) or (response[0] != value[0]):
+			return False
+	return True
+
+def ow_write_bytes(port, bytes):
+	for byte in bytes:
+		if not ow_write(port, byte):
+			return False
+	return True
+
+def ow_read(port):
+	value = 0
+	for i in range(0, 8):
+		port.write(b'\xFF')
+		response = port.read(1)
+		if len(response) != 1:
+			return None
+		if response[0] > 0xFE:
+			value |= 1 << i
+	return value
+
+def ow_read_bytes(port, count):
+	bytes = list()
+	offset = 0
+	while offset < count:
+		byte = ow_read(port)
+		if byte is None:
+			return None
+		bytes.append(byte)
+		if (offset % 16) != 15:
+			print('%02x ' % byte, end='', flush=True)
+		else:
+			print('%02x' % byte)
+		offset += 1
+	print('')
+	return bytes
+
+def read_eeprom():
+	global data
+	port = open_serial_port()
+	if not port:
+		return
+	with port as port:
+		if not ow_reset(port):
+			print('Failed to issue OneWire reset!')
+			return
+		if not ow_write_bytes(port, b'\xCC\xF0\x00\x00'):
+			print('Failed to send READ MEM command!')
+			return
+		print('Reading EEPROM...')
+		bytes = ow_read_bytes(port, 130)
+		if bytes is None:
+			print('Failed to read data!')
+		data = bytes[1:-1]
+		print('Done')
+
+def write_eeprom():
+	port = open_serial_port()
+	if not port:
+		return
+	with port as port:
+		print('Writing...')
+		offset = 0
+		while offset < len(data):
+			byte = data[offset]
+			if not ow_reset(port):
+				print('Failed to issue OneWire reset (offset = %i)!' % offset)
+				return
+			if not ow_write_bytes(port, b'\xCC\x0F' + bytes([offset & 0xFF, offset >> 8, byte])):
+				print('Failed to issue WRITE MEM command (offset = %i)!' % offset)
+				return
+			response = ow_read(port)
+			if response is None:
+				print('Write failed (offset = %i)!' % offset)
+			if (offset % 16) != 15:
+				print('%02x ' % response, end='', flush=True)
+			else:
+				print('%02x' % response)
+			offset += 1
+		print('')
+		print('Done')
+
 def print_menu():
 	m = get_manufacturer()
 	t = get_adapter_type()
@@ -120,6 +256,8 @@ def print_menu():
 	print(' [5] Serial number : %s' % sn)
 	print(' [6] Save changes and exit')
 	print(' [7] Exit without saving changes')
+	print(' [8] Read EEPROM data via 1wire')
+	print(' [9] Write EEPROM data via 1wire')
 	while True:
 		try:
 			return int(input('Select option [0-7]: '))
@@ -184,4 +322,8 @@ while True:
 		break
 	elif command == 7:
 		break
+	elif command == 8:
+		read_eeprom()
+	elif command == 9:
+		write_eeprom()
 
