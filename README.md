@@ -39,6 +39,8 @@ You need connect OneWire bus to any USB-UART adapter using simple schematic with
                        |
     RXD ----------------
 
+    GND ------------------------ GND
+
 **Warning: USB-UART adapter should use 3.3V or 5V logic levels. 12V levels will damage EEPROM IC.**
 
 You can read by this utility both original EEPROM and emulated by AVR. You can write only emulated EEPROM.
