@@ -1,0 +1,3 @@
+(fp_lib_table
+  (lib (name SOT-89-3)(type Legacy)(uri "$(KIPRJMOD)/SOT-89-3.mod")(options "")(descr ""))
+)

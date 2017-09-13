@@ -1,0 +1,32 @@
+EESchema-LIBRARY Version 2.3
+#encoding utf-8
+#(c) SnapEDA 2016 (snapeda.com)
+#This work is licensed under a Creative Commons Attribution-ShareAlike 4.0 International License (CC BY-SA) with Design Exception 1.0
+#
+# L78L33ACZ
+#
+DEF L78L33ACZ IC 0 40 N N 1 L N
+F0 "IC" 100 -301 50 H V L BNN
+F1 "L78L33ACZ" 100 -401 50 H V L BNN
+F2 "TO92" 0 0 50 H I L BNN
+F3 "Good" 0 0 50 H I L BNN "Availability"
+F4 "L78L Series 100 mA 3.3 V Positive Voltage Regulator Surface Mount - SOT-89" 0 0 50 H I L BNN "Description"
+F5 "STMicroelectronics" 0 0 50 H I L BNN "MF"
+F6 "SOT-89-3 STMicroelectronics" 0 0 50 H I L BNN "Package"
+F7 "0.17 USD" 0 0 50 H I L BNN "Price"
+F8 "L78L33ABUTR" 0 0 50 H I L BNN "MP"
+DRAW
+P 2 0 0 16 -200 -200 200 -200 N
+P 2 0 0 16 200 -200 200 100 N
+P 2 0 0 16 200 100 -200 100 N
+P 2 0 0 16 -200 100 -200 -200 N
+T 0 -80 -170 60 0 0 0 GND Normal 0 L B
+T 0 -175 -25 60 0 0 0 IN Normal 0 L B
+T 0 5 -25 60 0 0 0 OUT Normal 0 L B
+X IN 3 -300 0 100 R 40 40 0 0 I 
+X GND 2 0 -300 100 U 40 40 0 0 I 
+X OUT 1 300 0 100 L 40 40 0 0 P 
+ENDDRAW
+ENDDEF
+#
+# End Library
