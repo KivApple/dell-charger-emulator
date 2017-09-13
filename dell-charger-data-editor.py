@@ -260,7 +260,7 @@ def print_menu():
 	print(' [9] Write EEPROM data via 1wire')
 	while True:
 		try:
-			return int(input('Select option [0-7]: '))
+			return int(input('Select option [0-9]: '))
 		except Exception:
 			continue
 
