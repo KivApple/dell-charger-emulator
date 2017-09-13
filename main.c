@@ -120,6 +120,19 @@ static void ow_read_mem(void) {
 	ow_tx(ow.arg_buffer + 2, 1, OW_DATA_SOURCE_RAM, ow_read_real_mem);
 }
 
+static void ow_write_real_mem(void) {
+	uint16_t offset = (((uint16_t) ow.arg_buffer[1]) << 8) | ow.arg_buffer[0];
+	uint8_t data = ow.arg_buffer[2];
+	uint8_t *base = (uint8_t*) offset;
+	eeprom_write_byte(base, data);
+}
+
+static void ow_write_mem(void) {
+	uint8_t tmp[] = { ow.command, ow.arg_buffer[0], ow.arg_buffer[1], ow.arg_buffer[2] };
+	ow.arg_buffer[3] = Crc8(tmp, sizeof(tmp));
+	ow_tx(ow.arg_buffer + 2, 1, OW_DATA_SOURCE_RAM, ow_write_real_mem);
+}
+
 static void ow_command_received(void) {
 	switch (ow.command) {
 		case 0x33: // READ ROM
@@ -134,6 +147,10 @@ static void ow_command_received(void) {
 				ow_rx(ow.arg_buffer, 2, ow_read_mem);
 			}
 			break;
+		case 0x0F: // WRITE MEM
+			if (ow.selected) {
+				ow_rx(ow.arg_buffer, 3, ow_write_mem);
+			}
 	}
 }
 
