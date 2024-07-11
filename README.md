@@ -37,11 +37,16 @@ You can read and write EEPROM using dell-charger-data-editor.py (see console men
 
 You need connect OneWire bus to any USB-UART adapter using simple schematic with diode:
 
-    TXD --------|<|----*-------- ID
-                       |
-    RXD ----------------
+                        VCC 
+                        _|_
+                       |  | 4.7kOhm for 9600 baud
+                       |__|
+                        |
+TXD --------|<|----*----*--- ID
+                   |
+RXD ----------------
 
-    GND ------------------------ GND
+GND ------------------------ GND
 
 **Warning: USB-UART adapter should use 3.3V or 5V logic levels. 12V levels will damage EEPROM IC.**
 
